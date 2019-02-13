@@ -6,11 +6,20 @@ import { Methods } from './enums/methods.enum'
 export class Router {
   private routes: Route[] = []
 
+  constructor(private readonly prefix?: string) {}
+
   public handleRequest(req: IncomingMessage, res: ServerResponse): void {
-    const path = parseUrl(req.url || '/').pathname
+    const path = (this.prefix || '') + parseUrl(req.url || '/').pathname
 
     // Find router
-    const foundRouter = this.routes.find(route => route.path === path)
+    const foundRoute = this.routes.find(route => route.path === path)
+
+    if (!foundRoute) {
+      res.statusCode = 404
+      return res.end('Page not found')
+    }
+
+    foundRoute.callback(req, res)
   }
 
   public use(
