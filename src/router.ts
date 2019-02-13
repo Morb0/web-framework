@@ -9,10 +9,10 @@ export class Router {
   constructor(private readonly prefix?: string) {}
 
   public handleRequest(req: IncomingMessage, res: ServerResponse): void {
-    const path = (this.prefix || '') + parseUrl(req.url || '/').pathname
+    const path = parseUrl(req.url || '/').pathname
 
     // Find router
-    const foundRoute = this.routes.find(route => route.path === path)
+    const foundRoute = this.routes.find(route => (this.prefix || '') + route.path === path)
 
     if (!foundRoute) {
       res.statusCode = 404
