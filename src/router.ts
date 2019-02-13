@@ -12,7 +12,9 @@ export class Router {
     const path = parseUrl(req.url || '/').pathname
 
     // Find router
-    const foundRoute = this.routes.find(route => (this.prefix || '') + route.path === path)
+    const foundRoute = this.routes.find(
+      route => route.method === req.method && (this.prefix || '') + route.path === path
+    )
 
     if (!foundRoute) {
       res.statusCode = 404
@@ -36,5 +38,9 @@ export class Router {
 
   public get(path: string, callback: (req: IncomingMessage, res: ServerResponse) => void): void {
     this.use(path, Methods.GET, callback)
+  }
+
+  public post(path: string, callback: (req: IncomingMessage, res: ServerResponse) => void): void {
+    this.use(path, Methods.POST, callback)
   }
 }
