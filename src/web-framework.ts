@@ -1,1 +1,2 @@
-export { Application as default } from './application'
+export { Application } from './application'
+export { Router } from './router'
